@@ -30,7 +30,7 @@
 
         header {
             text-align: center;
-            padding: 30px 20px 40px;
+            padding: 20px 20px 40px;
             background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
             border-radius: 30px;
             margin-bottom: 30px;
@@ -39,46 +39,14 @@
             overflow: hidden;
         }
 
-        .safari-image {
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #81D4FA, #4FC3F7);
-            padding: 5px;
-            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .safari-image-inner {
+        .safari-main-image {
             width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 120px;
-            position: relative;
-        }
-
-        .safari-emoji {
-            position: absolute;
-            font-size: 45px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .safari-emoji:nth-child(1) { top: 15%; left: 15%; animation-delay: 0s; }
-        .safari-emoji:nth-child(2) { top: 15%; right: 15%; animation-delay: 0.5s; }
-        .safari-emoji:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 1s; }
-        .safari-emoji:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1.5s; }
-        .safari-emoji:nth-child(5) { top: 50%; left: 5%; animation-delay: 2s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+            max-width: 400px;
+            height: auto;
+            margin: 0 auto 30px;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.3);
         }
 
         h1 {
@@ -239,6 +207,12 @@
             transform: translateY(-1px);
         }
 
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .diapers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -255,12 +229,47 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(79, 195, 247, 0.2);
+            position: relative;
         }
 
         .diaper-card:hover {
             transform: translateY(-8px) scale(1.03);
             box-shadow: 0 12px 30px rgba(79, 195, 247, 0.4);
             border-color: #0288D1;
+        }
+
+        .diaper-card.sold-out {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+            border-color: #9E9E9E;
+        }
+
+        .diaper-card.sold-out:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.2);
+        }
+
+        .sold-out-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #F44336;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .stock-info {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
         }
 
         .diaper-size {
@@ -354,7 +363,7 @@
             font-weight: bold;
         }
 
-        .qty-btn:hover {
+        .qty-btn:hover:not(:disabled) {
             background: linear-gradient(135deg, #29B6F6, #0288D1);
             transform: scale(1.1);
         }
@@ -409,6 +418,18 @@
             font-size: 1.05em;
         }
 
+        .error-message {
+            background: linear-gradient(135deg, #FFCDD2, #EF9A9A);
+            color: #B71C1C;
+            padding: 18px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #E57373;
+            display: none;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
         .messages-wall {
             margin-top: 30px;
         }
@@ -434,6 +455,13 @@
             line-height: 1.6;
         }
 
+        .loading {
+            text-align: center;
+            color: #0288D1;
+            padding: 20px;
+            font-size: 1.1em;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.2em;
@@ -443,13 +471,8 @@
                 font-size: 1.8em;
             }
             
-            .safari-image {
-                width: 200px;
-                height: 200px;
-            }
-
-            .safari-emoji {
-                font-size: 35px;
+            .safari-main-image {
+                max-width: 300px;
             }
 
             .countdown {
@@ -487,16 +510,7 @@
 <body>
     <div class="container">
         <header>
-            <div class="safari-image">
-                <div class="safari-image-inner">
-                    <div class="safari-emoji">🦁</div>
-                    <div class="safari-emoji">🐘</div>
-                    <div class="safari-emoji">🦒</div>
-                    <div class="safari-emoji">🦓</div>
-                    <div class="safari-emoji">🐵</div>
-                    <div style="font-size: 80px;">🚙</div>
-                </div>
-            </div>
+            <img src="safari.png" alt="Safari Yuri Akio" class="safari-main-image" id="safariImage">
             <h1>Chá de Bebê</h1>
             <p class="baby-name">Yuri Akio</p>
             <p class="subtitle">está chegando!</p>
@@ -548,55 +562,30 @@
                     <textarea id="message" rows="4" placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
                 </div>
                 <div style="text-align: center;">
-                    <button type="submit">✅ Confirmar Presença</button>
+                    <button type="submit" id="rsvpButton">✅ Confirmar Presença</button>
                 </div>
                 <div class="success-message" id="rsvpSuccess">
                     ✅ Presença confirmada com sucesso! Muito obrigado!
+                </div>
+                <div class="error-message" id="rsvpError">
+                    ❌ Erro ao confirmar. Tente novamente.
                 </div>
             </form>
         </div>
 
         <div class="section">
             <h2>🎁 Lista de Presentes - Fraldas</h2>
-            <p class="intro-text">Caso deseje, sua contribuição será muito bem-vinda! Clique no tamanho desejado.</p>
-            <div class="diapers-grid">
-                <div class="diaper-card" onclick="openDiaperModal('P', 45)">
-                    <div class="diaper-size">P</div>
-                    <div class="diaper-info">🍼 Recém-nascido</div>
-                    <div class="diaper-info">Até 5kg</div>
-                    <div class="diaper-info">📦 ~40 unidades</div>
-                    <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">R$ 45,00</div>
-                </div>
-                <div class="diaper-card" onclick="openDiaperModal('M', 50)">
-                    <div class="diaper-size">M</div>
-                    <div class="diaper-info">👶 Bebê</div>
-                    <div class="diaper-info">5-9kg</div>
-                    <div class="diaper-info">📦 ~35 unidades</div>
-                    <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">R$ 50,00</div>
-                </div>
-                <div class="diaper-card" onclick="openDiaperModal('G', 55)">
-                    <div class="diaper-size">G</div>
-                    <div class="diaper-info">🧒 Crescendo</div>
-                    <div class="diaper-info">9-12kg</div>
-                    <div class="diaper-info">📦 ~30 unidades</div>
-                    <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">R$ 55,00</div>
-                </div>
-                <div class="diaper-card" onclick="openDiaperModal('XG', 60)">
-                    <div class="diaper-size">XG</div>
-                    <div class="diaper-info">👦 Ativo</div>
-                    <div class="diaper-info">12-15kg</div>
-                    <div class="diaper-info">📦 ~26 unidades</div>
-                    <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">R$ 60,00</div>
-                </div>
+            <p class="intro-text">Sua contribuição será muito bem-vinda! Clique no tamanho desejado.</p>
+            <div class="loading" id="loadingDiapers">Carregando disponibilidade...</div>
+            <div class="diapers-grid" id="diapersGrid" style="display: none;">
+                <!-- Será preenchido dinamicamente -->
             </div>
         </div>
 
         <div class="section messages-wall">
             <h2>💙 Mensagens de Carinho</h2>
             <div id="messagesContainer">
-                <p class="intro-text" style="color: #90CAF9;">
-                    As mensagens de carinho para o Yuri Akio aparecerão aqui...
-                </p>
+                <p class="intro-text loading">Carregando mensagens...</p>
             </div>
         </div>
     </div>
@@ -623,7 +612,7 @@
                     Chave PIX (Copie e cole no seu banco):
                 </p>
                 <div class="pix-code" id="pixCode">
-                    37296895845
+                    seupix@email.com
                 </div>
                 <div style="text-align: center; margin-top: 15px;">
                     <button onclick="copyPix()">📋 Copiar Chave PIX</button>
@@ -634,24 +623,52 @@
                 <label for="donorName">Após realizar o pagamento, confirme aqui:</label>
                 <input type="text" id="donorName" placeholder="Seu nome" style="margin-top: 10px;">
                 <div style="text-align: center; margin-top: 15px;">
-                    <button onclick="confirmPayment()">✅ Confirmar Pagamento</button>
+                    <button onclick="confirmPayment()" id="confirmPaymentBtn">✅ Confirmar Pagamento</button>
                 </div>
             </div>
 
             <div class="success-message" id="paymentSuccess">
                 ✅ Presente confirmado! Muito obrigado pela contribuição! 💙
             </div>
+            <div class="error-message" id="paymentError">
+                ❌ Erro ao confirmar. Tente novamente.
+            </div>
         </div>
     </div>
 
     <script>
-        // IMPORTANTE: Substitua esta URL pela URL do seu Google Apps Script
-        const GOOGLE_SCRIPT_URL = 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI';
-
+        // ==================== CONFIGURAÇÕES ====================
+        // SUBSTITUA PELA SUA URL DO GOOGLE APPS SCRIPT
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfcnv8-IsKr76XYt8FbiSU6zUGXiNNuwAxu2nu8w1NQN4jy56LIrMKPNZ3nuLEIAYoPw/exec';
+        
         // Data do chá de bebê
         const chaDate = new Date('2025-02-01T15:00:00');
 
-        // Atualizar contagem regressiva
+        // Configuração das fraldas
+        const DIAPER_CONFIG = {
+            'P': { price: 45, units: 40, description: '🍼 Recém-nascido', weight: 'Até 5kg' },
+            'M': { price: 50, units: 35, description: '👶 Bebê', weight: '5-9kg' },
+            'G': { price: 55, units: 30, description: '🧒 Crescendo', weight: '9-12kg' },
+            'XG': { price: 60, units: 26, description: '👦 Ativo', weight: '12-15kg' }
+        };
+
+        // Estado global
+        let diaperStock = { P: 0, M: 0, G: 0, XG: 0 };
+        let currentSize = 'P';
+        let currentPrice = 45;
+        let currentQuantity = 1;
+        let maxAvailable = 0;
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            loadDiaperStock();
+            loadMessages();
+            setupFormHandler();
+        });
+
+        // ==================== CONTAGEM REGRESSIVA ====================
         function updateCountdown() {
             const now = new Date();
             const diff = chaDate - now;
@@ -674,69 +691,75 @@
             }
         }
 
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Formulário de confirmação
-        document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const guests = document.getElementById('guests').value;
-            const message = document.getElementById('message').value;
-
-            const data = {
-                type: 'rsvp',
-                name: name,
-                guests: guests,
-                message: message,
-                timestamp: new Date().toISOString()
-            };
+        // ==================== GOOGLE SHEETS - CARREGAR ESTOQUE ====================
+        async function loadDiaperStock() {
+            if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwfcnv8-IsKr76XYt8FbiSU6zUGXiNNuwAxu2nu8w1NQN4jy56LIrMKPNZ3nuLEIAYoPw/exec') {
+                // Modo offline - estoque fictício para teste
+                diaperStock = { P: 20, M: 15, G: 10, XG: 5 };
+                renderDiaperCards();
+                return;
+            }
 
             try {
-                if (GOOGLE_SCRIPT_URL !== 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI') {
-                    await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock');
+                const data = await response.json();
+                if (data.stock) {
+                    diaperStock = data.stock;
                 }
-
-                document.getElementById('rsvpSuccess').style.display = 'block';
-                document.getElementById('rsvpForm').reset();
-
-                if (message) {
-                    addMessageToWall(name, message);
-                }
-
-                setTimeout(() => {
-                    document.getElementById('rsvpSuccess').style.display = 'none';
-                }, 5000);
-
             } catch (error) {
-                console.log('Erro ao enviar:', error);
-                alert('Presença confirmada! (Modo offline)');
+                console.error('Erro ao carregar estoque:', error);
+                diaperStock = { P: 20, M: 15, G: 10, XG: 5 };
             }
-        });
+            renderDiaperCards();
+        }
 
-        // Sistema de fraldas
-        let currentSize = 'P';
-        let currentPrice = 45;
-        let currentQuantity = 1;
+        // ==================== RENDERIZAR CARDS DE FRALDAS ====================
+        function renderDiaperCards() {
+            const grid = document.getElementById('diapersGrid');
+            const loading = document.getElementById('loadingDiapers');
+            
+            loading.style.display = 'none';
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
 
-        function openDiaperModal(size, price) {
+            Object.keys(DIAPER_CONFIG).forEach(size => {
+                const config = DIAPER_CONFIG[size];
+                const stock = diaperStock[size] || 0;
+                const isSoldOut = stock <= 0;
+
+                const card = document.createElement('div');
+                card.className = 'diaper-card' + (isSoldOut ? ' sold-out' : '');
+                card.onclick = isSoldOut ? null : () => openDiaperModal(size, config.price, stock);
+
+                card.innerHTML = `
+                    ${isSoldOut ? '<div class="sold-out-badge">Esgotado</div>' : ''}
+                    <div class="diaper-size">${size}</div>
+                    <div class="diaper-info">${config.description}</div>
+                    <div class="diaper-info">${config.weight}</div>
+                    <div class="diaper-info">📦 ~${config.units} unidades</div>
+                    <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">
+                        R$ ${config.price.toFixed(2).replace('.', ',')}
+                    </div>
+                    ${!isSoldOut ? `<div class="stock-info">✅ ${stock} pacote${stock !== 1 ? 's' : ''} disponível${stock !== 1 ? 'eis' : ''}</div>` : ''}
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // ==================== MODAL DE FRALDAS ====================
+        function openDiaperModal(size, price, stock) {
             currentSize = size;
             currentPrice = price;
             currentQuantity = 1;
+            maxAvailable = stock;
             
             document.getElementById('modalTitle').textContent = `Fralda Tamanho ${size}`;
             document.getElementById('quantity').textContent = '1';
             document.getElementById('totalPrice').textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
             document.getElementById('diaperModal').style.display = 'flex';
             document.getElementById('paymentSuccess').style.display = 'none';
+            document.getElementById('paymentError').style.display = 'none';
             document.getElementById('donorName').value = '';
         }
 
@@ -745,88 +768,22 @@
         }
 
         function changeQuantity(change) {
-            currentQuantity = Math.max(1, currentQuantity + change);
-            document.getElementById('quantity').textContent = currentQuantity;
-            const total = currentPrice * currentQuantity;
-            document.getElementById('totalPrice').textContent = `R$ ${total.toFixed(2)}`;
+            const newQuantity = currentQuantity + change;
+            if (newQuantity >= 1 && newQuantity <= maxAvailable) {
+                currentQuantity = newQuantity;
+                document.getElementById('quantity').textContent = currentQuantity;
+                const total = currentPrice * currentQuantity;
+                document.getElementById('totalPrice').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            }
         }
 
         function copyPix() {
             const pixKey = document.getElementById('pixCode').textContent.trim();
             navigator.clipboard.writeText(pixKey).then(() => {
-                alert('Chave PIX copiada! Cole no seu aplicativo do banco.');
+                alert('✅ Chave PIX copiada! Cole no seu aplicativo do banco.');
             });
         }
 
+        // ==================== CONFIRMAR PAGAMENTO ====================
         async function confirmPayment() {
-            const donorName = document.getElementById('donorName').value.trim();
             
-            if (!donorName) {
-                alert('Por favor, digite seu nome para confirmar o presente!');
-                return;
-            }
-
-            const data = {
-                type: 'gift',
-                name: donorName,
-                size: currentSize,
-                quantity: currentQuantity,
-                total: (currentPrice * currentQuantity).toFixed(2),
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                if (GOOGLE_SCRIPT_URL !== 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI') {
-                    await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                }
-
-                document.getElementById('paymentSuccess').style.display = 'block';
-                document.getElementById('donorName').value = '';
-
-                setTimeout(() => {
-                    closeDiaperModal();
-                }, 3000);
-
-            } catch (error) {
-                console.log('Erro ao enviar:', error);
-                alert('Presente registrado! Obrigado pela contribuição!');
-                setTimeout(() => {
-                    closeDiaperModal();
-                }, 2000);
-            }
-        }
-
-        function addMessageToWall(name, message) {
-            const container = document.getElementById('messagesContainer');
-            
-            // Remove mensagem placeholder
-            if (container.children.length === 1 && container.children[0].tagName === 'P') {
-                container.innerHTML = '';
-            }
-
-            const messageCard = document.createElement('div');
-            messageCard.className = 'message-card';
-            messageCard.innerHTML = `
-                <div class="message-author">💚 ${name}</div>
-                <div>${message}</div>
-            `;
-            container.insertBefore(messageCard, container.firstChild);
-        }
-
-        // Fechar modal ao clicar fora
-        window.onclick = function(event) {
-            const modal = document.getElementById('diaperModal');
-            if (event.target === modal) {
-                closeDiaperModal();
-            }
-        }
-    </script>
-</body>
-</html>

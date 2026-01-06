@@ -49,6 +49,11 @@
             box-shadow: 0 8px 25px rgba(79, 195, 247, 0.3);
         }
 
+        header > * {
+            position: relative;
+            z-index: 1;
+        }
+
         h1 {
             font-family: 'Fredoka', sans-serif;
             font-size: 3em;
@@ -230,6 +235,19 @@
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(79, 195, 247, 0.2);
             position: relative;
+            overflow: hidden;
+        }
+
+        .diaper-image {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            font-size: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
         }
 
         .diaper-card:hover {
@@ -475,6 +493,10 @@
                 max-width: 300px;
             }
 
+            header {
+                padding: 20px 20px 40px;
+            }
+
             .countdown {
                 gap: 15px;
             }
@@ -489,7 +511,7 @@
             }
 
             .diapers-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
                 gap: 15px;
             }
 
@@ -510,13 +532,13 @@
 <body>
     <div class="container">
         <header>
-            <img src="safari.png" alt="Safari Yuri Akio" class="safari-main-image" id="safariImage">
+            <img src="safari.png" alt="Safari Yuri Akio" class="safari-main-image">
             <h1>Chá de Bebê</h1>
             <p class="baby-name">Yuri Akio</p>
             <p class="subtitle">está chegando!</p>
             
             <div class="event-info">
-                <div><strong>📅 Data:</strong> Sábado, 01 de Fevereiro de 2025</div>
+                <div><strong>📅 Data:</strong> Domingo, 01 de fevereiro de 2026</div>
                 <div><strong>🕒 Horário:</strong> 15h</div>
                 <div><strong>📍 Local:</strong> R. Federação Paulista de Futebol, 41<br>Barra Funda, São Paulo - SP</div>
             </div>
@@ -554,8 +576,8 @@
                     <input type="text" id="name" required placeholder="Digite seu nome completo">
                 </div>
                 <div class="form-group">
-                    <label for="guests">Nome dos Acompanhantes (opcional)</label>
-                    <textarea id="guests" rows="3" placeholder="Digite o nome dos acompanhantes (um por linha)"></textarea>
+                    <label for="guests">Nome Completo dos Acompanhantes (opcional)</label>
+                    <textarea id="guests" rows="3" placeholder="Digite o nome completo dos acompanhantes (um por linha)"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="message">Mensagem Especial para o Yuri Akio (opcional)</label>
@@ -582,12 +604,14 @@
             </div>
         </div>
 
+        <!-- MENSAGENS OCULTAS - Descomente para exibir -->
         <div class="section messages-wall">
             <h2>💙 Mensagens de Carinho</h2>
             <div id="messagesContainer">
                 <p class="intro-text loading">Carregando mensagens...</p>
             </div>
         </div>
+        <!-- -->
     </div>
 
     <div class="modal" id="diaperModal">
@@ -638,18 +662,50 @@
 
     <script>
         // CONFIGURAÇÕES
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwkjTzY7luerRz70X77nJo86MHDpN_25OMyYqlDrS7fd2b2v1R5ZOktBMr1AUoMJ7L5uw/exec';
+        //const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMPdFKjMlt67XL0fuICcmDozMI6yBxwe4__Z9vPHNkDvq5uDSWFtm61HdcR0C9RVhr2g/exec';
+		const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIhTzTlVQgsawqTOIrOFBT9NkpRWx4Ufw-AgJ0-O-PSd3nwMLGdeeMBU1otOsa38aSYw/exec';
+		
         
-        const chaDate = new Date('2025-02-01T15:00:00');
+        const chaDate = new Date('2026-02-01T15:00:00-03:00');
 
         const DIAPER_CONFIG = {
-            'P': { price: 45, units: 40, description: '🍼 Recém-nascido', weight: 'Até 5kg' },
-            'M': { price: 50, units: 35, description: '👶 Bebê', weight: '5-9kg' },
-            'G': { price: 55, units: 30, description: '🧒 Crescendo', weight: '9-12kg' },
-            'XG': { price: 60, units: 26, description: '👦 Ativo', weight: '12-15kg' }
+            'P': { 
+                price: 45, 
+                units: 40, 
+                description: '🍼 Recém-nascido', 
+                weight: 'Até 5kg',
+                emoji: '🧷',
+                image: '' // Deixe vazio ou coloque URL da imagem
+            },
+            'M': { 
+                price: 50, 
+                units: 35, 
+                description: '👶 Bebê', 
+                weight: '5-9kg',
+                emoji: '🍼',
+                image: ''
+            },
+            'G': { 
+                price: 55, 
+                units: 30, 
+                description: '🧒 Crescendo', 
+                weight: '9-12kg',
+                emoji: '👶',
+                image: ''
+            },
+            'XG': { 
+                price: 60, 
+                units: 26, 
+                description: '👦 Ativo', 
+                weight: '12-15kg',
+                emoji: '🧸',
+                image: ''
+            }
         };
 
         let diaperStock = { P: 0, M: 0, G: 0, XG: 0 };
+        let diaperPrices = { P: 45, M: 50, G: 55, XG: 60 };
+        let diaperImages = { P: '', M: '', G: '', XG: '' };
         let currentSize = 'P';
         let currentPrice = 45;
         let currentQuantity = 1;
@@ -667,6 +723,10 @@
             const now = new Date();
             const diff = chaDate - now;
 
+            console.log('Data atual:', now);
+            console.log('Data do chá:', chaDate);
+            console.log('Diferença (ms):', diff);
+
             if (diff > 0) {
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -674,39 +734,45 @@
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
                 document.getElementById('days').textContent = days;
-                document.getElementById('hours').textContent = hours;
-                document.getElementById('minutes').textContent = minutes;
-                document.getElementById('seconds').textContent = seconds;
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
             } else {
                 document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
-                document.getElementById('seconds').textContent = '0';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
             }
         }
 
-        setInterval(updateCountdown, 1000);
-        updateCountdown();										   
         async function loadDiaperStock() {
             try {
                 console.log('Carregando estoque...');
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock', {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    redirect: 'follow'
                 });
                 
                 console.log('Response status:', response.status);
-                const data = await response.json();
-                console.log('Dados recebidos:', data);
+                const text = await response.text();
+                console.log('Resposta recebida:', text);
+                
+                const data = JSON.parse(text);
+                console.log('Dados parseados:', data);
                 
                 if (data.stock) {
                     diaperStock = data.stock;
                     console.log('Estoque atualizado:', diaperStock);
-                } else {
-                    console.warn('Sem dados de estoque, usando padrão');
-                    diaperStock = { P: 20, M: 15, G: 10, XG: 5 };
+                }
+                
+                if (data.prices) {
+                    diaperPrices = data.prices;
+                    console.log('Preços atualizados:', diaperPrices);
+                }
+                
+                if (data.images) {
+                    diaperImages = data.images;
+                    console.log('Imagens atualizadas:', diaperImages);
                 }
             } catch (error) {
                 console.error('Erro ao carregar estoque:', error);
@@ -726,22 +792,24 @@
             Object.keys(DIAPER_CONFIG).forEach(size => {
                 const config = DIAPER_CONFIG[size];
                 const stock = diaperStock[size] || 0;
+                const price = diaperPrices[size] || config.price;
                 const isSoldOut = stock <= 0;
 
                 const card = document.createElement('div');
                 card.className = 'diaper-card' + (isSoldOut ? ' sold-out' : '');
-                card.onclick = isSoldOut ? null : () => openDiaperModal(size, config.price, stock);
+                card.onclick = isSoldOut ? null : () => openDiaperModal(size, price, stock);
 
                 card.innerHTML = `
-                    ${isSoldOut ? '<div class="sold-out-badge">Esgotado</div>' : ''}
+                    ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida!</div>' : ''}
+                    <div class="diaper-image">${config.emoji}</div>
                     <div class="diaper-size">${size}</div>
                     <div class="diaper-info">${config.description}</div>
                     <div class="diaper-info">${config.weight}</div>
                     <div class="diaper-info">📦 ~${config.units} unidades</div>
                     <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">
-                        R$ ${config.price.toFixed(2).replace('.', ',')}
+                        R$ ${price.toFixed(2).replace('.', ',')}
                     </div>
-                    ${!isSoldOut ? `<div class="stock-info">✅ ${stock} pacote${stock !== 1 ? 's' : ''} disponível${stock !== 1 ? 'eis' : ''}</div>` : ''}
+                    ${!isSoldOut ? `<div class="stock-info">✅ ${stock} pacote${stock > 1 ? 's' : ''} necessário${stock > 1 ? 's' : ''}</div>` : ''}
                 `;
 
                 grid.appendChild(card);
@@ -783,17 +851,21 @@
                 alert('✅ Chave PIX copiada! Cole no seu aplicativo do banco.');
             });
         }
+
         async function confirmPayment() {
             const donorName = document.getElementById('donorName').value.trim();
-			const confirmBtn = document.getElementById('confirmPaymentBtn');
+            const confirmBtn = document.getElementById('confirmPaymentBtn');
             
             if (!donorName) {
                 alert('Por favor, digite seu nome para confirmar o presente!');
                 return;
             }
 
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = '⏳ Enviando...';
+
             const data = {
-                type: 'gift',
+                action: 'addGift',
                 name: donorName,
                 size: currentSize,
                 quantity: currentQuantity,
@@ -802,51 +874,164 @@
             };
 
             try {
-                if (GOOGLE_SCRIPT_URL !== 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI') {
-                    await fetch(GOOGLE_SCRIPT_URL, {
+                console.log('Enviando presente:', data);
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify(data)
+                });
+                
+                console.log('Response status:', response.status);
+                const text = await response.text();
+                console.log('Resposta recebida:', text);
+                
+                const result = JSON.parse(text);
+                console.log('Resultado parseado:', result);
+                
+                if (result.success) {
+                    document.getElementById('paymentSuccess').style.display = 'block';
+                    document.getElementById('donorName').value = '';
+                    loadDiaperStock();
+                    
+                    setTimeout(() => {
+                        closeDiaperModal();
+                        confirmBtn.disabled = false;
+                        confirmBtn.textContent = '✅ Confirmar Pagamento';
+                    }, 3000);
+                } else {
+                    throw new Error(result.error || 'Erro ao salvar');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('paymentError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('paymentError').style.display = 'none';
+                }, 3000);
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = '✅ Confirmar Pagamento';
+            }
+        }
+
+        function setupFormHandler() {
+            document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const guests = document.getElementById('guests').value;
+                const message = document.getElementById('message').value;
+                const button = document.getElementById('rsvpButton');
+
+                button.disabled = true;
+                button.textContent = '⏳ Enviando...';
+
+                const data = {
+                    action: 'addRSVP',
+                    name: name,
+                    guests: guests,
+                    message: message,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    console.log('Enviando RSVP:', data);
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        redirect: 'follow',
                         body: JSON.stringify(data)
                     });
+                    
+                    console.log('Response status:', response.status);
+                    const text = await response.text();
+                    console.log('Resposta recebida:', text);
+                    
+                    const result = JSON.parse(text);
+                    console.log('Resultado parseado:', result);
+                    
+                    if (result.success) {
+                        document.getElementById('rsvpSuccess').style.display = 'block';
+                        document.getElementById('rsvpForm').reset();
+
+                        if (message) {
+                            loadMessages(); // Recarrega todas as mensagens
+                        }
+
+                        setTimeout(() => {
+                            document.getElementById('rsvpSuccess').style.display = 'none';
+                        }, 5000);
+                    } else {
+                        throw new Error(result.error || 'Erro ao salvar');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    document.getElementById('rsvpError').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('rsvpError').style.display = 'none';
+                    }, 3000);
                 }
 
-                document.getElementById('paymentSuccess').style.display = 'block';
-                document.getElementById('donorName').value = '';
+                button.disabled = false;
+                button.textContent = '✅ Confirmar Presença';
+            });
+        }
 
-                setTimeout(() => {
-                    closeDiaperModal();
-                }, 3000);
-
+        async function loadMessages() {
+            const container = document.getElementById('messagesContainer');
+            
+            try {
+                console.log('Carregando mensagens...');
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getMessages', {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                
+                console.log('Response status:', response.status);
+                const text = await response.text();
+                console.log('Resposta recebida:', text);
+                
+                const data = JSON.parse(text);
+                console.log('Mensagens parseadas:', data);
+                
+                container.innerHTML = '';
+                
+                if (data.messages && data.messages.length > 0) {
+                    console.log(`${data.messages.length} mensagens carregadas`);
+                    data.messages.reverse().forEach(msg => {
+                        addMessageToWall(msg.name, msg.message);
+                    });
+                } else {
+                    console.log('Nenhuma mensagem encontrada');
+                    container.innerHTML = '<p class="intro-text" style="color: #90CAF9;">As mensagens de carinho para o Yuri Akio aparecerão aqui...</p>';
+                }
             } catch (error) {
-                console.log('Erro ao enviar:', error);
-                alert('Presente registrado! Obrigado pela contribuição!');
-                setTimeout(() => {
-                    closeDiaperModal();
-                }, 2000);
+                console.error('Erro ao carregar mensagens:', error);
+                container.innerHTML = '<p class="intro-text" style="color: #90CAF9;">As mensagens de carinho para o Yuri Akio aparecerão aqui...</p>';
             }
         }
 
         function addMessageToWall(name, message) {
             const container = document.getElementById('messagesContainer');
             
-            // Remove mensagem placeholder
-            if (container.children.length === 1 && container.children[0].tagName === 'P') {
-                container.innerHTML = '';
+            // Remove mensagem placeholder se existir
+            const placeholder = container.querySelector('p.intro-text');
+            if (placeholder) {
+                placeholder.remove();
             }
 
             const messageCard = document.createElement('div');
             messageCard.className = 'message-card';
             messageCard.innerHTML = `
-                <div class="message-author">💚 ${name}</div>
-                <div>${message}</div>
+                <div class="message-author">💙 ${escapeHtml(name)}</div>
+                <div class="message-text">${escapeHtml(message)}</div>
             `;
             container.insertBefore(messageCard, container.firstChild);
         }
 
-        // Fechar modal ao clicar fora
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         window.onclick = function(event) {
             const modal = document.getElementById('diaperModal');
             if (event.target === modal) {

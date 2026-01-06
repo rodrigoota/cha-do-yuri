@@ -239,8 +239,8 @@
         }
 
         .diaper-image {
-            width: 120px;
-            height: 120px;
+            width: 200px;
+            height: 200px;
             margin: 0 auto 15px;
             font-size: 80px;
             display: flex;
@@ -677,7 +677,7 @@
 
         const DIAPER_CONFIG = {
             'P': { 
-                price: 45, 
+                price: 50, 
                 units: 40, 
                 description: '🍼 Recém-nascido', 
                 weight: 'Até 5kg',
@@ -685,24 +685,24 @@
                 image: '' // Deixe vazio ou coloque URL da imagem
             },
             'M': { 
-                price: 50, 
-                units: 35, 
+                price: 80, 
+                units: 80, 
                 description: '👶 Bebê', 
                 weight: '5-9kg',
                 emoji: '🍼',
                 image: ''
             },
             'G': { 
-                price: 55, 
-                units: 30, 
+                price: 100, 
+                units: 68, 
                 description: '🧒 Crescendo', 
                 weight: '9-12kg',
                 emoji: '👶',
                 image: ''
             },
             'XG': { 
-                price: 60, 
-                units: 26, 
+                price: 120, 
+                units: 60, 
                 description: '👦 Ativo', 
                 weight: '12-15kg',
                 emoji: '🧸',
@@ -800,8 +800,9 @@
                 const config = DIAPER_CONFIG[size];
                 const stock = diaperStock[size] || 0;
                 const price = diaperPrices[size] || config.price;
-				const image = diaperImages[size] || config.emoji;
+				const image = diaperImages[size];
                 const isSoldOut = stock <= 0;
+				const hasImage = image && image.trim() !== '';
 
                 const card = document.createElement('div');
                 card.className = 'diaper-card' + (isSoldOut ? ' sold-out' : '');
@@ -811,7 +812,7 @@
                     ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida, obrigado! 😁</div>' : ''}
                     <div class="diaper-size">${size}</div>
 					${
-						image
+						hasImage
 						? `
 							<div class="diaper-image">
 								<img src="${image}" alt="Fralda ${size}">

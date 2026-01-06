@@ -250,6 +250,13 @@
             border-radius: 15px;
         }
 
+		.diaper-image img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
+			display: block;
+		}
+
         .diaper-card:hover {
             transform: translateY(-8px) scale(1.03);
             box-shadow: 0 12px 30px rgba(79, 195, 247, 0.4);
@@ -793,6 +800,7 @@
                 const config = DIAPER_CONFIG[size];
                 const stock = diaperStock[size] || 0;
                 const price = diaperPrices[size] || config.price;
+				const image = diaperImages[size] || config.emoji;
                 const isSoldOut = stock <= 0;
 
                 const card = document.createElement('div');
@@ -800,12 +808,24 @@
                 card.onclick = isSoldOut ? null : () => openDiaperModal(size, price, stock);
 
                 card.innerHTML = `
-                    ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida!</div>' : ''}
-                    <div class="diaper-image">${config.emoji}</div>
+                    ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida, obrigado! 😁</div>' : ''}
                     <div class="diaper-size">${size}</div>
-                    <div class="diaper-info">${config.description}</div>
-                    <div class="diaper-info">${config.weight}</div>
-                    <div class="diaper-info">📦 ~${config.units} unidades</div>
+					${
+						image
+						? `
+							<div class="diaper-image">
+								<img src="${image}" alt="Fralda ${size}">
+							</div>
+						  `
+						: `
+							<div class="diaper-image">
+								${config.emoji}
+							</div>
+							<div class="diaper-info">${config.description}</div>
+							<div class="diaper-info">${config.weight}</div>
+							<div class="diaper-info">📦 ~${config.units} unidades</div>
+						  `
+					}
                     <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">
                         R$ ${price.toFixed(2).replace('.', ',')}
                     </div>

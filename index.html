@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -250,12 +251,12 @@
             border-radius: 15px;
         }
 
-		.diaper-image img {
-			max-width: 100%;
-			max-height: 100%;
-			object-fit: contain;
-			display: block;
-		}
+        .diaper-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
 
         .diaper-card:hover {
             transform: translateY(-8px) scale(1.03);
@@ -418,17 +419,34 @@
             border: 2px solid #4FC3F7;
         }
 
+        .qrcode-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 280px;
+        }
+
+        #qrcode {
+            display: inline-block;
+        }
+
         .pix-code {
             background: white;
             padding: 18px;
             border-radius: 12px;
             word-break: break-all;
             font-family: 'Courier New', monospace;
-            font-size: 0.95em;
+            font-size: 0.85em;
             margin: 15px 0;
             border: 2px dashed #29B6F6;
             color: #01579B;
             font-weight: 600;
+            max-height: 100px;
+            overflow-y: auto;
         }
 
         .success-message {
@@ -453,6 +471,14 @@
             display: none;
             font-weight: 600;
             font-size: 1.05em;
+        }
+
+        .modal-step {
+            display: none;
+        }
+
+        .modal-step.active {
+            display: block;
         }
 
         .messages-wall {
@@ -576,7 +602,7 @@
 
         <div class="section">
             <h2>📝 Confirme sua Presença</h2>
-            <p class="intro-text">Ficaremos muito felizes com sua presença!</p>
+            <p class="intro-text">Ficaremos muito felizes com sua presença! Favor confirmar até 18/01.</p>
             <form id="rsvpForm">
                 <div class="form-group">
                     <label for="name">Seu Nome Completo *</label>
@@ -585,10 +611,6 @@
                 <div class="form-group">
                     <label for="guests">Nome Completo dos Acompanhantes (opcional)</label>
                     <textarea id="guests" rows="3" placeholder="Digite o nome completo dos acompanhantes (um por linha)"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="message">Mensagem Especial para o Yuri Akio (opcional)</label>
-                    <textarea id="message" rows="4" placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
                 </div>
                 <div style="text-align: center;">
                     <button type="submit" id="rsvpButton">✅ Confirmar Presença</button>
@@ -603,136 +625,140 @@
         </div>
 
         <div class="section">
-            <h2>🎁 Lista de Presentes - Fraldas</h2>
+            <h2>🎁 Lista de Presentes - Fraldas PIX</h2>
             <p class="intro-text">Caso deseje, sua contribuição será muito bem-vinda! Clique no tamanho desejado.</p>
             <div class="loading" id="loadingDiapers">Carregando disponibilidade...</div>
-            <div class="diapers-grid" id="diapersGrid" style="display: none;">
-                <!-- Será preenchido dinamicamente -->
-            </div>
+            <div class="diapers-grid" id="diapersGrid" style="display: none;"></div>
         </div>
 
-        <!-- MENSAGENS OCULTAS - Descomente para exibir -->
+        <!-- MENSAGENS OCULTAS -->
+        <!-- -->
         <div class="section messages-wall">
             <h2>💙 Mensagens de Carinho</h2>
             <div id="messagesContainer">
                 <p class="intro-text loading">Carregando mensagens...</p>
             </div>
         </div>
-        <!-- -->
+        
     </div>
 
     <div class="modal" id="diaperModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeDiaperModal()">&times;</span>
-            <h2 id="modalTitle">Fralda Tamanho P</h2>
             
-            <div class="quantity-selector">
-                <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
-                <div class="qty-display" id="quantity">1</div>
-                <button class="qty-btn" onclick="changeQuantity(1)">+</button>
-            </div>
-            
-            <div style="text-align: center;">
-                <p style="margin: 10px 0; color: #0277BD; font-weight: 600;">Pacotes selecionados</p>
-                <div class="total-price" id="totalPrice">R$ 45,00</div>
-            </div>
-
-            <div class="pix-area">
-                <h3 style="text-align: center; margin-bottom: 15px; color: #0277BD; font-family: 'Fredoka', sans-serif;">💰 PIX para Pagamento</h3>
-                <p style="text-align: center; margin-bottom: 10px; font-size: 0.95em; color: #01579B; font-weight: 600;">
-                    Chave PIX (Copie e cole no seu banco):
-                </p>
-                <div class="pix-code" id="pixCode">
-                    37296895845
+            <!-- ETAPA 1: Seleção de quantidade -->
+            <div class="modal-step active" id="step1">
+                <h2 id="modalTitle">Tamanho P</h2>
+                
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                    <div class="qty-display" id="quantity">1</div>
+                    <button class="qty-btn" onclick="changeQuantity(1)">+</button>
                 </div>
-                <div style="text-align: center; margin-top: 15px;">
-                    <button onclick="copyPix()">📋 Copiar Chave PIX</button>
+                
+                <div style="text-align: center;">
+                    <p style="margin: 10px 0; color: #0277BD; font-weight: 600;">Pacotes selecionados</p>
+                    <div class="total-price" id="totalPrice">R$ 45,00</div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="goToPixStep()">Gerar PIX 💙</button>
                 </div>
             </div>
 
-            <div style="margin-top: 25px;">
-                <label for="donorName">Após realizar o pagamento, confirme aqui:</label>
-                <input type="text" id="donorName" placeholder="Seu nome" style="margin-top: 10px;">
-                <div style="text-align: center; margin-top: 15px;">
-                    <button onclick="confirmPayment()" id="confirmPaymentBtn">✅ Confirmar Pagamento</button>
+            <!-- ETAPA 2: QR Code PIX -->
+            <div class="modal-step" id="step2">
+                <h2>💰 Pagamento via PIX</h2>
+                
+                <div class="pix-area">
+                    <p style="text-align: center; margin-bottom: 15px; font-weight: 600; color: #0277BD;">
+                        Escaneie o QR Code:
+                    </p>
+                    <div class="qrcode-container">
+                        <div id="qrcode"></div>
+                    </div>
+                    
+                    <p style="text-align: center; margin: 15px 0 10px; font-weight: 600; color: #0277BD;">
+                        Ou copie o código PIX:
+                    </p>
+                    <div class="pix-code" id="pixCodeCopy"></div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button onclick="copyPixCode()">📋 Copiar Código PIX</button>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="goToConfirmStep()">Já Paguei ✅</button>
                 </div>
             </div>
 
-            <div class="success-message" id="paymentSuccess">
-                ✅ Presente confirmado! Muito obrigado pela contribuição! 💙
-            </div>
-            <div class="error-message" id="paymentError">
-                ❌ Erro ao confirmar. Tente novamente.
+            <!-- ETAPA 3: Confirmação e mensagem -->
+            <div class="modal-step" id="step3">
+                <h2>💙 Confirme seu Presente</h2>
+                
+                <div class="form-group">
+                    <label for="donorName">Seu Nome *</label>
+                    <input type="text" id="donorName" placeholder="Digite seu nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="donorMessage">Deixe um mensagem para o Yuri (opcional)</label>
+                    <textarea id="donorMessage" rows="4" placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
+                </div>
+
+                <div style="text-align: center;">
+                    <button onclick="confirmPayment()" id="confirmPaymentBtn">✅ Confirmar Presente</button>
+                </div>
+
+                <div class="success-message" id="paymentSuccess">
+                    ✅ Presente confirmado! Agradecemos o carinho com o Yuri Akio 💙
+                </div>
+                <div class="error-message" id="paymentError">
+                    ❌ Erro ao confirmar. Tente novamente.
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÕES
-        //const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMPdFKjMlt67XL0fuICcmDozMI6yBxwe4__Z9vPHNkDvq5uDSWFtm61HdcR0C9RVhr2g/exec';
-		const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIhTzTlVQgsawqTOIrOFBT9NkpRWx4Ufw-AgJ0-O-PSd3nwMLGdeeMBU1otOsa38aSYw/exec';
+        //const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIhTzTlVQgsawqTOIrOFBT9NkpRWx4Ufw-AgJ0-O-PSd3nwMLGdeeMBU1otOsa38aSYw/exec';
+		const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2dJXrkoRa4u6QFmq8_TQCmcrO6Kd0YoaY6E3L1P_UDkzADFNcp52XmM5QkKrVAlqlhQ/exec';
 		
+        const PIX_KEY = '37296895845';
+        const PIX_NAME = 'RODRIGO OTA';
+        const PIX_CITY = 'SAO PAULO';
         
         const chaDate = new Date('2026-02-01T15:00:00-03:00');
 
         const DIAPER_CONFIG = {
-            'P': { 
-                price: 50, 
-                units: 40, 
-                description: '🍼 Recém-nascido', 
-                weight: 'Até 5kg',
-                emoji: '🧷',
-                image: '' // Deixe vazio ou coloque URL da imagem
-            },
-            'M': { 
-                price: 80, 
-                units: 80, 
-                description: '👶 Bebê', 
-                weight: '5-9kg',
-                emoji: '🍼',
-                image: ''
-            },
-            'G': { 
-                price: 100, 
-                units: 68, 
-                description: '🧒 Crescendo', 
-                weight: '9-12kg',
-                emoji: '👶',
-                image: ''
-            },
-            'XG': { 
-                price: 120, 
-                units: 60, 
-                description: '👦 Ativo', 
-                weight: '12-15kg',
-                emoji: '🧸',
-                image: ''
-            }
+            'RN': { price: 30, units: 10, description: '👶 Recém-nascido', weight: 'Até 3,5kg', emoji: '🍼', image: '' },
+            'P': { price: 50, units: 20, description: '🍼 Pequeno', weight: '3,5-5kg', emoji: '🧷', image: '' },
+            'M': { price: 80, units: 40, description: '👶 Bebê', weight: '5-9kg', emoji: '🍼', image: '' },
+            'G': { price: 100, units: 30, description: '🧒 Crescendo', weight: '9-12kg', emoji: '👶', image: '' },
+            'XG': { price: 130, units: 20, description: '👦 Ativo', weight: '12-15kg', emoji: '🧸', image: '' },
+            'XXG': { price: 150, units: 10, description: '🧒 Grande', weight: 'Acima de 15kg', emoji: '🎈', image: '' }
         };
 
-        let diaperStock = { P: 0, M: 0, G: 0, XG: 0 };
-        let diaperPrices = { P: 45, M: 50, G: 55, XG: 60 };
-        let diaperImages = { P: '', M: '', G: '', XG: '' };
+        let diaperStock = { RN: 0, P: 0, M: 0, G: 0, XG: 0, XXG: 0 };
+        let diaperPrices = { RN: 40, P: 50, M: 80, G: 100, XG: 120, XXG: 140 };
+        let diaperImages = { RN: '', P: '', M: '', G: '', XG: '', XXG: '' };
         let currentSize = 'P';
-        let currentPrice = 45;
+        let currentPrice = 50;
         let currentQuantity = 1;
         let maxAvailable = 0;
+        let pixCopyCode = '';
 
         document.addEventListener('DOMContentLoaded', function() {
             updateCountdown();
             setInterval(updateCountdown, 1000);
             loadDiaperStock();
-            loadMessages();
+            loadMessages();						   
             setupFormHandler();
         });
 
         function updateCountdown() {
             const now = new Date();
             const diff = chaDate - now;
-
-            console.log('Data atual:', now);
-            console.log('Data do chá:', chaDate);
-            console.log('Diferença (ms):', diff);
 
             if (diff > 0) {
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -754,36 +780,24 @@
 
         async function loadDiaperStock() {
             try {
-                console.log('Carregando estoque...');
+				console.log('Carregando estoque...');									 
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock', {
                     method: 'GET',
                     redirect: 'follow'
                 });
                 
-                console.log('Response status:', response.status);
+				console.log('Response status:', response.status);												 
                 const text = await response.text();
-                console.log('Resposta recebida:', text);
-                
+				console.log('Resposta recebida:', text);										
                 const data = JSON.parse(text);
-                console.log('Dados parseados:', data);
+				console.log('Dados parseados:', data);									  
                 
-                if (data.stock) {
-                    diaperStock = data.stock;
-                    console.log('Estoque atualizado:', diaperStock);
-                }
-                
-                if (data.prices) {
-                    diaperPrices = data.prices;
-                    console.log('Preços atualizados:', diaperPrices);
-                }
-                
-                if (data.images) {
-                    diaperImages = data.images;
-                    console.log('Imagens atualizadas:', diaperImages);
-                }
+                if (data.stock) diaperStock = data.stock;
+                if (data.prices) diaperPrices = data.prices;
+                if (data.images) diaperImages = data.images;
             } catch (error) {
                 console.error('Erro ao carregar estoque:', error);
-                diaperStock = { P: 20, M: 15, G: 10, XG: 5 };
+                diaperStock = { RN: 20, P: 15, M: 10, G: 8, XG: 5, XXG: 3 };
             }
             renderDiaperCards();
         }
@@ -800,33 +814,33 @@
                 const config = DIAPER_CONFIG[size];
                 const stock = diaperStock[size] || 0;
                 const price = diaperPrices[size] || config.price;
-				const image = diaperImages[size];
+                const image = diaperImages[size];
                 const isSoldOut = stock <= 0;
-				const hasImage = image && image.trim() !== '';
+                const hasImage = image && image.trim() !== '';
 
                 const card = document.createElement('div');
                 card.className = 'diaper-card' + (isSoldOut ? ' sold-out' : '');
                 card.onclick = isSoldOut ? null : () => openDiaperModal(size, price, stock);
 
                 card.innerHTML = `
-                    ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida, obrigado! 😁</div>' : ''}
+                    ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida, obrigado! 😊</div>' : ''}
                     <div class="diaper-size">${size}</div>
-					${
-						hasImage
-						? `
-							<div class="diaper-image">
-								<img src="${image}" alt="Fralda ${size}">
-							</div>
-						  `
-						: `
-							<div class="diaper-image">
-								${config.emoji}
-							</div>
-							<div class="diaper-info">${config.description}</div>
-							<div class="diaper-info">${config.weight}</div>
-							<div class="diaper-info">📦 ~${config.units} unidades</div>
-						  `
-					}
+                    ${
+                        hasImage
+                        ? `
+                            <div class="diaper-image">
+                                <img src="${image}" alt="Fralda ${size}">
+                            </div>
+                          `
+                        : `
+                            <div class="diaper-image">
+                                ${config.emoji}
+                            </div>
+                            <div class="diaper-info">${config.description}</div>
+                            <div class="diaper-info">${config.weight}</div>
+                            <div class="diaper-info">📦 ~${config.units} unidades</div>
+                          `
+                    }
                     <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">
                         R$ ${price.toFixed(2).replace('.', ',')}
                     </div>
@@ -843,13 +857,19 @@
             currentQuantity = 1;
             maxAvailable = stock;
             
-            document.getElementById('modalTitle').textContent = `Fralda Tamanho ${size}`;
+            document.getElementById('modalTitle').textContent = `Tamanho ${size}`;
             document.getElementById('quantity').textContent = '1';
             document.getElementById('totalPrice').textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
-            document.getElementById('diaperModal').style.display = 'flex';
+            
+            // Reset modal steps
+            document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('donorName').value = '';
+            document.getElementById('donorMessage').value = '';
             document.getElementById('paymentSuccess').style.display = 'none';
             document.getElementById('paymentError').style.display = 'none';
-            document.getElementById('donorName').value = '';
+            
+            document.getElementById('diaperModal').style.display = 'flex';
         }
 
         function closeDiaperModal() {
@@ -866,15 +886,97 @@
             }
         }
 
-        function copyPix() {
-            const pixKey = document.getElementById('pixCode').textContent.trim();
-            navigator.clipboard.writeText(pixKey).then(() => {
-                alert('✅ Chave PIX copiada! Cole no seu aplicativo do banco.');
+        function goToPixStep() {
+            document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step2').classList.add('active');
+            generatePixQRCode();
+        }
+
+        function goToConfirmStep() {
+            document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step3').classList.add('active');
+        }
+
+        function generatePixQRCode() {
+            const totalAmount = (currentPrice * currentQuantity).toFixed(2);
+            
+            // Gera o código PIX no formato EMV
+            pixCopyCode = generatePixCode(PIX_KEY, PIX_NAME, PIX_CITY, totalAmount);
+            
+            // Exibe o código
+            document.getElementById('pixCodeCopy').textContent = pixCopyCode;
+            
+            // Limpa QR Code anterior se existir
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            // Gera novo QR Code
+            new QRCode(qrcodeDiv, {
+                text: pixCopyCode,
+                width: 240,
+                height: 240,
+                colorDark: "#0288D1",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        function generatePixCode(key, name, city, amount) {
+            // Formato PIX EMV simplificado
+            const payload = [
+                { id: '00', value: '01' }, // Payload Format Indicator
+                { id: '26', value: [
+                    { id: '00', value: 'BR.GOV.BCB.PIX' },
+                    { id: '01', value: key }
+                ]},
+                { id: '52', value: '0000' }, // Merchant Category Code
+                { id: '53', value: '986' }, // Transaction Currency (BRL)
+                { id: '54', value: amount }, // Transaction Amount
+                { id: '58', value: 'BR' }, // Country Code
+                { id: '59', value: name.substring(0, 25) }, // Merchant Name
+                { id: '60', value: city.substring(0, 15) }, // Merchant City
+                { id: '62', value: [
+                    { id: '05', value: '***' }
+                ]}
+            ];
+
+            function formatEMV(obj) {
+                if (Array.isArray(obj.value)) {
+                    const nested = obj.value.map(formatEMV).join('');
+                    return obj.id + String(nested.length).padStart(2, '0') + nested;
+                }
+                return obj.id + String(obj.value.length).padStart(2, '0') + obj.value;
+            }
+
+            let emv = payload.map(formatEMV).join('');
+            
+            // Calcula CRC16
+            function crc16(str) {
+                let crc = 0xFFFF;
+                for (let i = 0; i < str.length; i++) {
+                    crc ^= str.charCodeAt(i) << 8;
+                    for (let j = 0; j < 8; j++) {
+                        crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+                    }
+                }
+                return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+            }
+
+            emv += '6304';
+            emv += crc16(emv);
+
+            return emv;
+        }
+
+        function copyPixCode() {
+            navigator.clipboard.writeText(pixCopyCode).then(() => {
+                alert('✅ Código PIX copiado! Cole no seu aplicativo do banco.');
             });
         }
 
         async function confirmPayment() {
             const donorName = document.getElementById('donorName').value.trim();
+            const donorMessage = document.getElementById('donorMessage').value.trim();
             const confirmBtn = document.getElementById('confirmPaymentBtn');
             
             if (!donorName) {
@@ -891,33 +993,33 @@
                 size: currentSize,
                 quantity: currentQuantity,
                 total: (currentPrice * currentQuantity).toFixed(2),
+                message: donorMessage,
                 timestamp: new Date().toISOString()
             };
 
             try {
-                console.log('Enviando presente:', data);
+				console.log('Enviando presente:', data);										
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     redirect: 'follow',
                     body: JSON.stringify(data)
                 });
                 
-                console.log('Response status:', response.status);
+				console.log('Response status:', response.status);												 
                 const text = await response.text();
-                console.log('Resposta recebida:', text);
-                
+				console.log('Resposta recebida:', text);										
                 const result = JSON.parse(text);
-                console.log('Resultado parseado:', result);
                 
                 if (result.success) {
                     document.getElementById('paymentSuccess').style.display = 'block';
                     document.getElementById('donorName').value = '';
+                    document.getElementById('donorMessage').value = '';
                     loadDiaperStock();
                     
                     setTimeout(() => {
                         closeDiaperModal();
                         confirmBtn.disabled = false;
-                        confirmBtn.textContent = '✅ Confirmar Pagamento';
+                        confirmBtn.textContent = '✅ Confirmar Presente';
                     }, 3000);
                 } else {
                     throw new Error(result.error || 'Erro ao salvar');
@@ -929,7 +1031,7 @@
                     document.getElementById('paymentError').style.display = 'none';
                 }, 3000);
                 confirmBtn.disabled = false;
-                confirmBtn.textContent = '✅ Confirmar Pagamento';
+                confirmBtn.textContent = '✅ Confirmar Presente';
             }
         }
 
@@ -939,7 +1041,6 @@
                 
                 const name = document.getElementById('name').value;
                 const guests = document.getElementById('guests').value;
-                const message = document.getElementById('message').value;
                 const button = document.getElementById('rsvpButton');
 
                 button.disabled = true;
@@ -949,32 +1050,22 @@
                     action: 'addRSVP',
                     name: name,
                     guests: guests,
-                    message: message,
                     timestamp: new Date().toISOString()
                 };
 
                 try {
-                    console.log('Enviando RSVP:', data);
                     const response = await fetch(GOOGLE_SCRIPT_URL, {
                         method: 'POST',
                         redirect: 'follow',
                         body: JSON.stringify(data)
                     });
                     
-                    console.log('Response status:', response.status);
                     const text = await response.text();
-                    console.log('Resposta recebida:', text);
-                    
                     const result = JSON.parse(text);
-                    console.log('Resultado parseado:', result);
                     
                     if (result.success) {
                         document.getElementById('rsvpSuccess').style.display = 'block';
                         document.getElementById('rsvpForm').reset();
-
-                        if (message) {
-                            loadMessages(); // Recarrega todas as mensagens
-                        }
 
                         setTimeout(() => {
                             document.getElementById('rsvpSuccess').style.display = 'none';
@@ -1052,7 +1143,6 @@
             div.textContent = text;
             return div.innerHTML;
         }
-
         window.onclick = function(event) {
             const modal = document.getElementById('diaperModal');
             if (event.target === modal) {

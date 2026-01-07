@@ -602,11 +602,15 @@
 
         <div class="section">
             <h2>📝 Confirme sua Presença</h2>
-            <p class="intro-text">Ficaremos muito felizes com sua presença! Favor confirmar até 18/01.</p>
+            <p class="intro-text">Favor confirmar até <strong>18/01</strong>.</p>
             <form id="rsvpForm">
                 <div class="form-group">
                     <label for="name">Seu Nome Completo *</label>
                     <input type="text" id="name" required placeholder="Digite seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Celular (com DDD) *</label>
+                    <input type="tel" id="phone" required placeholder="(11) 99999-9999" maxlength="15">
                 </div>
                 <div class="form-group">
                     <label for="guests">Nome Completo dos Acompanhantes (opcional)</label>
@@ -625,21 +629,18 @@
         </div>
 
         <div class="section">
-            <h2>🎁 Lista de Presentes - Fraldas PIX</h2>
-            <p class="intro-text">Caso deseje, sua contribuição será muito bem-vinda! Clique no tamanho desejado.</p>
+            <h2>🎁 Fraldas PIX</h2>
+            <p class="intro-text">Caso deseje nos presentear, elaboramos essa forma de contribuir via PIX. Desse jeito, vamos comprando as fraldas conforme o Yuri vai crescendo 😃</p>
             <div class="loading" id="loadingDiapers">Carregando disponibilidade...</div>
             <div class="diapers-grid" id="diapersGrid" style="display: none;"></div>
         </div>
-
-        <!-- MENSAGENS OCULTAS -->
-        <!-- -->
         <div class="section messages-wall">
             <h2>💙 Mensagens de Carinho</h2>
             <div id="messagesContainer">
                 <p class="intro-text loading">Carregando mensagens...</p>
             </div>
         </div>
-        
+
     </div>
 
     <div class="modal" id="diaperModal">
@@ -702,8 +703,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="donorMessage">Deixe um mensagem para o Yuri (opcional)</label>
+                    <label for="donorMessage">Mensagem para o Yuri Akio (opcional)</label>
                     <textarea id="donorMessage" rows="4" placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1em;">
+                        <input type="checkbox" id="messagePublic" checked style="width: auto; cursor: pointer;">
+                        <span>Tornar mensagem pública no site</span>
+                    </label>
                 </div>
 
                 <div style="text-align: center;">
@@ -721,9 +729,7 @@
     </div>
 
     <script>
-        //const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIhTzTlVQgsawqTOIrOFBT9NkpRWx4Ufw-AgJ0-O-PSd3nwMLGdeeMBU1otOsa38aSYw/exec';
-		const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2dJXrkoRa4u6QFmq8_TQCmcrO6Kd0YoaY6E3L1P_UDkzADFNcp52XmM5QkKrVAlqlhQ/exec';
-		
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXHlKXxAvBdK2IOUTbU7qUjEPjGnuPw4SgU1EjQD3F2XYAPi1xfz7zVpW5zBzTU5DHSw/exec';
         const PIX_KEY = '37296895845';
         const PIX_NAME = 'RODRIGO OTA';
         const PIX_CITY = 'SAO PAULO';
@@ -752,7 +758,7 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
             loadDiaperStock();
-            loadMessages();						   
+            loadMessages(); // Carrega mensagens ao iniciar
             setupFormHandler();
         });
 
@@ -780,17 +786,13 @@
 
         async function loadDiaperStock() {
             try {
-				console.log('Carregando estoque...');									 
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock', {
                     method: 'GET',
                     redirect: 'follow'
                 });
                 
-				console.log('Response status:', response.status);												 
                 const text = await response.text();
-				console.log('Resposta recebida:', text);										
                 const data = JSON.parse(text);
-				console.log('Dados parseados:', data);									  
                 
                 if (data.stock) diaperStock = data.stock;
                 if (data.prices) diaperPrices = data.prices;
@@ -844,7 +846,7 @@
                     <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">
                         R$ ${price.toFixed(2).replace('.', ',')}
                     </div>
-                    ${!isSoldOut ? `<div class="stock-info">✅ ${stock} pacote${stock > 1 ? 's' : ''} necessário${stock > 1 ? 's' : ''}</div>` : ''}
+                    ${!isSoldOut ? `<div class="stock-info">✅ Clique para presentear</div>` : ''}
                 `;
 
                 grid.appendChild(card);
@@ -878,7 +880,7 @@
 
         function changeQuantity(change) {
             const newQuantity = currentQuantity + change;
-            if (newQuantity >= 1 && newQuantity <= maxAvailable) {
+            if (newQuantity >= 1) { // Removido o limite máximo
                 currentQuantity = newQuantity;
                 document.getElementById('quantity').textContent = currentQuantity;
                 const total = currentPrice * currentQuantity;
@@ -977,6 +979,7 @@
         async function confirmPayment() {
             const donorName = document.getElementById('donorName').value.trim();
             const donorMessage = document.getElementById('donorMessage').value.trim();
+            const messagePublic = document.getElementById('messagePublic').checked;
             const confirmBtn = document.getElementById('confirmPaymentBtn');
             
             if (!donorName) {
@@ -994,27 +997,31 @@
                 quantity: currentQuantity,
                 total: (currentPrice * currentQuantity).toFixed(2),
                 message: donorMessage,
+                messagePublic: messagePublic,
                 timestamp: new Date().toISOString()
             };
 
             try {
-				console.log('Enviando presente:', data);										
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     redirect: 'follow',
                     body: JSON.stringify(data)
                 });
                 
-				console.log('Response status:', response.status);												 
                 const text = await response.text();
-				console.log('Resposta recebida:', text);										
                 const result = JSON.parse(text);
                 
                 if (result.success) {
                     document.getElementById('paymentSuccess').style.display = 'block';
                     document.getElementById('donorName').value = '';
                     document.getElementById('donorMessage').value = '';
+                    document.getElementById('messagePublic').checked = true;
                     loadDiaperStock();
+                    
+                    // Recarrega mensagens se for pública
+                    if (messagePublic && donorMessage) {
+                        setTimeout(() => loadMessages(), 1000);
+                    }
                     
                     setTimeout(() => {
                         closeDiaperModal();
@@ -1036,10 +1043,29 @@
         }
 
         function setupFormHandler() {
+            // Máscara de telefone
+            document.getElementById('phone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length > 10) {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+                } else if (value.length > 6) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+                } else if (value.length > 2) {
+                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                } else {
+                    value = value.replace(/^(\d*)/, '($1');
+                }
+                
+                e.target.value = value;
+            });
+
             document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
                 const guests = document.getElementById('guests').value;
                 const button = document.getElementById('rsvpButton');
 
@@ -1049,6 +1075,7 @@
                 const data = {
                     action: 'addRSVP',
                     name: name,
+                    phone: phone,
                     guests: guests,
                     timestamp: new Date().toISOString()
                 };
@@ -1090,32 +1117,33 @@
             const container = document.getElementById('messagesContainer');
             
             try {
-                console.log('Carregando mensagens...');
+                //console.log('Carregando mensagens...');
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getMessages', {
                     method: 'GET',
                     redirect: 'follow'
                 });
                 
-                console.log('Response status:', response.status);
+                //console.log('Response status:', response.status);
                 const text = await response.text();
-                console.log('Resposta recebida:', text);
+                //console.log('Resposta recebida:', text);
                 
                 const data = JSON.parse(text);
-                console.log('Mensagens parseadas:', data);
+                //console.log('Mensagens parseadas:', data);
                 
                 container.innerHTML = '';
                 
                 if (data.messages && data.messages.length > 0) {
-                    console.log(`${data.messages.length} mensagens carregadas`);
-                    data.messages.reverse().forEach(msg => {
+                    //console.log(`${data.messages.length} mensagens carregadas`);
+					const ultimas5 = data.messages.slice(-5);
+                    ultimas5.forEach(msg => {
                         addMessageToWall(msg.name, msg.message);
                     });
                 } else {
-                    console.log('Nenhuma mensagem encontrada');
+                    //console.log('Nenhuma mensagem encontrada');
                     container.innerHTML = '<p class="intro-text" style="color: #90CAF9;">As mensagens de carinho para o Yuri Akio aparecerão aqui...</p>';
                 }
             } catch (error) {
-                console.error('Erro ao carregar mensagens:', error);
+                //console.error('Erro ao carregar mensagens:', error);
                 container.innerHTML = '<p class="intro-text" style="color: #90CAF9;">As mensagens de carinho para o Yuri Akio aparecerão aqui...</p>';
             }
         }
@@ -1142,7 +1170,7 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
+        }									   
         window.onclick = function(event) {
             const modal = document.getElementById('diaperModal');
             if (event.target === modal) {

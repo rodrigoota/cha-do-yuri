@@ -9,8 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
 	<link rel="icon"
       type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎈</text></svg>">	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎈</text></svg>">																																					
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -632,13 +632,43 @@
         </div>
 
         <div class="section">
-            <h2>🎁 Fraldas PIX</h2>
+            <h2>🎁 Fraldas por PIX</h2>
             <p class="intro-text">Caso deseje nos presentear, preparamos essa opção de contribuição via PIX. <br> Assim, vamos comprando as fraldas conforme o Yuri vai crescendo 😃</p>
             <div class="loading" id="loadingDiapers">Carregando disponibilidade...</div>
             <div class="diapers-grid" id="diapersGrid" style="display: none;"></div>
         </div>
+
         <div class="section messages-wall">
-            <h2>💙 Últimas Mensagens de Carinho</h2>
+            <h2>💙 Mensagens de Carinho</h2>
+            <p class="intro-text">Deixe uma mensagem especial para o Yuri Akio!</p>
+            
+            <form id="messageForm" style="margin-bottom: 30px;">
+                <div class="form-group">
+                    <label for="messageName">Seu Nome *</label>
+                    <input type="text" id="messageName" required placeholder="Digite seu nome">
+                </div>
+                <div class="form-group">
+                    <label for="messageText">Mensagem para o Yuri Akio *</label>
+                    <textarea id="messageText" rows="4" required placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1em;">
+                        <input type="checkbox" id="messageFormPublic" checked style="width: auto; cursor: pointer;">
+                        <span>Tornar mensagem pública no site</span>
+                    </label>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" id="messageButton">💙 Enviar Mensagem</button>
+                </div>
+                <div class="success-message" id="messageSuccess">
+                    ✅ Mensagem enviada com sucesso! Muito obrigado!
+                </div>
+                <div class="error-message" id="messageError">
+                    ❌ Erro ao enviar. Tente novamente.
+                </div>
+            </form>
+
+            <h3 style="font-family: 'Fredoka', sans-serif; color: #0288D1; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Últimas Mensagens</h3>
             <div id="messagesContainer">
                 <p class="intro-text loading">Carregando mensagens...</p>
             </div>
@@ -704,7 +734,7 @@
                     <label for="donorName">Seu Nome *</label>
                     <input type="text" id="donorName" placeholder="Digite seu nome" required>
                 </div>
-
+				<!--
                 <div class="form-group">
                     <label for="donorMessage">Mensagem para o Yuri Akio (opcional)</label>
                     <textarea id="donorMessage" rows="4" placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
@@ -716,7 +746,7 @@
                         <span>Tornar mensagem pública no site</span>
                     </label>
                 </div>
-
+				-->
                 <div style="text-align: center;">
                     <button onclick="confirmPayment()" id="confirmPaymentBtn">✅ Confirmar Presente</button>
                 </div>
@@ -732,7 +762,7 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXHlKXxAvBdK2IOUTbU7qUjEPjGnuPw4SgU1EjQD3F2XYAPi1xfz7zVpW5zBzTU5DHSw/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6ln7vqgWb4DZwEt7RYLTJnCWi30ke3vHtJ3YgwcJgkXr6pBNUefwFapuuAQVixfS20A/exec';
         const PIX_KEY = '37296895845';
         const PIX_NAME = 'RODRIGO OTA';
         const PIX_CITY = 'SAO PAULO';
@@ -763,6 +793,7 @@
             loadDiaperStock();
             loadMessages(); // Carrega mensagens ao iniciar
             setupFormHandler();
+			setupMessageForm();
         });
 
         function updateCountdown() {
@@ -870,7 +901,7 @@
             document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
             document.getElementById('step1').classList.add('active');
             document.getElementById('donorName').value = '';
-            document.getElementById('donorMessage').value = '';
+            //document.getElementById('donorMessage').value = '';
             document.getElementById('paymentSuccess').style.display = 'none';
             document.getElementById('paymentError').style.display = 'none';
             
@@ -978,11 +1009,9 @@
                 alert('✅ Código PIX copiado! Cole no seu aplicativo do banco.');
             });
         }
-
+		
         async function confirmPayment() {
             const donorName = document.getElementById('donorName').value.trim();
-            const donorMessage = document.getElementById('donorMessage').value.trim();
-            const messagePublic = document.getElementById('messagePublic').checked;
             const confirmBtn = document.getElementById('confirmPaymentBtn');
             
             if (!donorName) {
@@ -999,8 +1028,6 @@
                 size: currentSize,
                 quantity: currentQuantity,
                 total: (currentPrice * currentQuantity).toFixed(2),
-                message: donorMessage,
-                messagePublic: messagePublic,
                 timestamp: new Date().toISOString()
             };
 
@@ -1017,15 +1044,7 @@
                 if (result.success) {
                     document.getElementById('paymentSuccess').style.display = 'block';
                     document.getElementById('donorName').value = '';
-                    document.getElementById('donorMessage').value = '';
-                    document.getElementById('messagePublic').checked = true;
-                    loadDiaperStock();
-                    
-                    // Recarrega mensagens se for pública
-                    if (messagePublic && donorMessage) {
-                        setTimeout(() => loadMessages(), 1000);
-                    }
-                    
+                    loadDiaperStock();														
                     setTimeout(() => {
                         closeDiaperModal();
                         confirmBtn.disabled = false;
@@ -1115,6 +1134,70 @@
                 button.textContent = '✅ Confirmar Presença';
             });
         }
+		
+		function setupMessageForm(){
+			
+			document.getElementById('messageForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+				
+                const name = document.getElementById('messageName').value.trim();
+                const message = document.getElementById('messageText').value.trim();
+                const isPublic = document.getElementById('messageFormPublic').checked;
+                const button = document.getElementById('messageButton');
+
+                if (!name || !message) {
+                    alert('Por favor, preencha seu nome e a mensagem!');
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent = '⏳ Enviando...';
+
+                const data = {
+                    action: 'addMessage',
+                    name: name,
+                    message: message,
+                    messagePublic: isPublic,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const text = await response.text();
+                    const result = JSON.parse(text);
+                    
+                    if (result.success) {
+                        document.getElementById('messageSuccess').style.display = 'block';
+                        document.getElementById('messageForm').reset();
+                        document.getElementById('messageFormPublic').checked = true;
+
+                        if (isPublic) {
+                            setTimeout(() => loadMessages(), 1000);
+                        }
+
+                        setTimeout(() => {
+                            document.getElementById('messageSuccess').style.display = 'none';
+                        }, 5000);
+                    } else {
+                        throw new Error(result.error || 'Erro ao salvar');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    document.getElementById('messageError').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('messageError').style.display = 'none';
+                    }, 3000);
+                }
+
+                button.disabled = false;
+                button.textContent = '💙 Enviar Mensagem';		
+            });
+        }		
 
         async function loadMessages() {
             const container = document.getElementById('messagesContainer');
@@ -1137,7 +1220,7 @@
                 
                 if (data.messages && data.messages.length > 0) {
                     //console.log(`${data.messages.length} mensagens carregadas`);
-					const ultimas5 = data.messages.slice(-5);
+					const ultimas5 = data.messages.slice(-7);
                     ultimas5.forEach(msg => {
                         addMessageToWall(msg.name, msg.message);
                     });
@@ -1173,7 +1256,7 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }									   
+        }		 
         window.onclick = function(event) {
             const modal = document.getElementById('diaperModal');
             if (event.target === modal) {

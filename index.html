@@ -762,9 +762,11 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6ln7vqgWb4DZwEt7RYLTJnCWi30ke3vHtJ3YgwcJgkXr6pBNUefwFapuuAQVixfS20A/exec';
-        const PIX_KEY = '37296895845';
-        const PIX_NAME = 'RODRIGO OTA';
+        //const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6ln7vqgWb4DZwEt7RYLTJnCWi30ke3vHtJ3YgwcJgkXr6pBNUefwFapuuAQVixfS20A/exec';
+		const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyfOECnJJMcdC4MlIMpm3pUPoUwQTXA71eFepdNkUEwNfsXLa1q5oaFOwP08A4vy9fMQ/exec';
+		
+        const PIX_KEY = '64349999000161';
+        const PIX_NAME = 'ADRIANA OTA';
         const PIX_CITY = 'SAO PAULO';
         
         const chaDate = new Date('2026-02-01T15:00:00-03:00');
@@ -1220,7 +1222,7 @@
                 
                 if (data.messages && data.messages.length > 0) {
                     //console.log(`${data.messages.length} mensagens carregadas`);
-					const ultimas5 = data.messages.slice(-7);
+					const ultimas5 = data.messages.slice(-15);
                     ultimas5.forEach(msg => {
                         addMessageToWall(msg.name, msg.message);
                     });

@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá de Bebê - Yuri Akio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎈</text></svg>">																																					
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #B3E5FC 100%);
+            color: #424242;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 20px 40px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+            border-radius: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(100, 181, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .safari-main-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin: 0 auto 30px;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.3);
+        }
+
+        header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3em;
+            color: #0288D1;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.8em;
+            color: #0277BD;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .baby-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.2em;
+            color: #01579B;
+            margin-top: 15px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(79, 195, 247, 0.3);
+        }
+
+        .event-info {
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            line-height: 1.8;
+            box-shadow: 0 5px 20px rgba(79, 195, 247, 0.4);
+        }
+
+        .event-info strong {
+            font-size: 1.2em;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(100, 181, 246, 0.25);
+            animation: slideUp 0.6s ease-out;
+            border: 3px solid rgba(129, 212, 250, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Fredoka', sans-serif;
+            color: #0288D1;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            min-width: 90px;
+            color: white;
+            box-shadow: 0 5px 20px rgba(79, 195, 247, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .countdown-number {
+            font-size: 3em;
+            font-weight: bold;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .countdown-label {
+            font-size: 1em;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #0277BD;
+            font-size: 1.1em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #81D4FA;
+            border-radius: 15px;
+            font-size: 1.05em;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #29B6F6;
+            box-shadow: 0 0 0 4px rgba(79, 195, 247, 0.2);
+            background: white;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+            color: white;
+            padding: 18px 45px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.15em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(79, 195, 247, 0.4);
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.5);
+            background: linear-gradient(135deg, #29B6F6, #0288D1);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .diapers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .diaper-card {
+            background: linear-gradient(135deg, #E1F5FE, #B3E5FC);
+            border: 3px solid #4FC3F7;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diaper-image {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
+            font-size: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+        }
+
+        .diaper-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .diaper-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(79, 195, 247, 0.4);
+            border-color: #0288D1;
+        }
+
+        .diaper-card.sold-out {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+            border-color: #9E9E9E;
+        }
+
+        .diaper-card.sold-out:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.2);
+        }
+
+        .sold-out-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #F44336;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .stock-info {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .diaper-size {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #0288D1;
+            margin-bottom: 12px;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .diaper-info {
+            font-size: 1em;
+            color: #01579B;
+            margin: 8px 0;
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(1, 87, 155, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            position: relative;
+            animation: modalAppear 0.4s ease-out;
+            box-shadow: 0 20px 60px rgba(1, 87, 155, 0.5);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2.5em;
+            cursor: pointer;
+            color: #90CAF9;
+            transition: color 0.3s;
+            font-weight: bold;
+        }
+
+        .close-modal:hover {
+            color: #0288D1;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .qty-btn {
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
+            font-weight: bold;
+        }
+
+        .qty-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #29B6F6, #0288D1);
+            transform: scale(1.1);
+        }
+
+        .qty-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+            color: #0288D1;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .total-price {
+            font-size: 2.5em;
+            color: #0288D1;
+            font-weight: bold;
+            margin: 25px 0;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .pix-area {
+            background: linear-gradient(135deg, #E1F5FE, #B3E5FC);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid #4FC3F7;
+        }
+
+        .qrcode-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 280px;
+        }
+
+        #qrcode {
+            display: inline-block;
+        }
+
+        .pix-code {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 15px 0;
+            border: 2px dashed #29B6F6;
+            color: #01579B;
+            font-weight: 600;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #C8E6C9, #A5D6A7);
+            color: #1B5E20;
+            padding: 18px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #66BB6A;
+            display: none;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #FFCDD2, #EF9A9A);
+            color: #B71C1C;
+            padding: 18px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #E57373;
+            display: none;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .modal-step {
+            display: none;
+        }
+
+        .modal-step.active {
+            display: block;
+        }
+
+        .messages-wall {
+            margin-top: 30px;
+        }
+
+        .message-card {
+            background: linear-gradient(135deg, #E1F5FE, #B3E5FC);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #29B6F6;
+            box-shadow: 0 3px 10px rgba(79, 195, 247, 0.2);
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #0277BD;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .message-text {
+            color: #01579B;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            color: #0288D1;
+            padding: 20px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .baby-name {
+                font-size: 1.8em;
+            }
+            
+            .safari-main-image {
+                max-width: 300px;
+            }
+
+            header {
+                padding: 20px 20px 40px;
+            }
+
+            .countdown {
+                gap: 15px;
+            }
+
+            .countdown-item {
+                min-width: 70px;
+                padding: 18px;
+            }
+
+            .countdown-number {
+                font-size: 2.2em;
+            }
+
+            .diapers-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .modal-content {
+                padding: 30px 25px;
+            }
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 1.15em;
+            color: #0277BD;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="safari.png" alt="Safari Yuri Akio" class="safari-main-image">
+            <h1>Chá de Bebê</h1>
+            <p class="baby-name">Yuri Akio</p>
+            <p class="subtitle">está chegando!</p>
+            
+            <div class="event-info">
+                <div><strong>📅 Data:</strong> Domingo, 01 de fevereiro de 2026</div>
+                <div><strong>🕒 Horário:</strong> 15h</div>
+                <div><strong>📍 Local:</strong> Flow 1 - R. Federação Paulista de Futebol, 41<br>Barra Funda, São Paulo - SP</div>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>⏰ Contagem Regressiva</h2>
+            <p class="intro-text">Estamos ansiosos para celebrar com você!</p>
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">--</div>
+                    <div class="countdown-label">Dias</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">--</div>
+                    <div class="countdown-label">Horas</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">--</div>
+                    <div class="countdown-label">Minutos</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">--</div>
+                    <div class="countdown-label">Segundos</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Confirme sua Presença</h2>
+            <p class="intro-text">Favor confirmar até <strong>23/01</strong>.</p>
+            <form id="rsvpForm">
+                <div class="form-group">
+                    <label for="name">Seu Nome Completo *</label>
+                    <input type="text" id="name" required placeholder="Digite seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Celular (com DDD) *</label>
+                    <input type="tel" id="phone" required placeholder="(11) 99999-9999" maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label for="guests">Nome Completo dos Acompanhantes (opcional)</label>
+                    <textarea id="guests" rows="3" placeholder="Digite o nome completo dos acompanhantes (um por linha)"></textarea>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" id="rsvpButton">✅ Confirmar Presença</button>
+                </div>
+                <div class="success-message" id="rsvpSuccess">
+                    ✅ Presença confirmada com sucesso! Muito obrigado!
+                </div>
+                <div class="error-message" id="rsvpError">
+                    ❌ Erro ao confirmar. Tente novamente.
+                </div>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>🎁 Fraldas por PIX</h2>
+            <p class="intro-text">Caso deseje nos presentear, preparamos essa opção de contribuição via PIX. <br> Assim, vamos comprando as fraldas conforme o Yuri vai crescendo 😃</p>
+            <div class="loading" id="loadingDiapers">Carregando disponibilidade...</div>
+            <div class="diapers-grid" id="diapersGrid" style="display: none;"></div>
+        </div>
+
+        <div class="section messages-wall">
+            <h2>💙 Mensagens de Carinho</h2>
+            <p class="intro-text">Deixe uma mensagem especial para o Yuri Akio!</p>
+            
+            <form id="messageForm" style="margin-bottom: 30px;">
+                <div class="form-group">
+                    <label for="messageName">Seu Nome *</label>
+                    <input type="text" id="messageName" required placeholder="Digite seu nome">
+                </div>
+                <div class="form-group">
+                    <label for="messageText">Mensagem para o Yuri Akio *</label>
+                    <textarea id="messageText" rows="4" required placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1em;">
+                        <input type="checkbox" id="messageFormPublic" checked style="width: auto; cursor: pointer;">
+                        <span>Tornar mensagem pública no site</span>
+                    </label>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" id="messageButton">💙 Enviar Mensagem</button>
+                </div>
+                <div class="success-message" id="messageSuccess">
+                    ✅ Mensagem enviada com sucesso! Muito obrigado!
+                </div>
+                <div class="error-message" id="messageError">
+                    ❌ Erro ao enviar. Tente novamente.
+                </div>
+            </form>
+
+            <h3 style="font-family: 'Fredoka', sans-serif; color: #0288D1; font-size: 1.5em; margin-bottom: 20px; text-align: center;">Últimas Mensagens</h3>
+            <div id="messagesContainer">
+                <p class="intro-text loading">Carregando mensagens...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="diaperModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeDiaperModal()">&times;</span>
+            
+            <!-- ETAPA 1: Seleção de quantidade -->
+            <div class="modal-step active" id="step1">
+                <h2 id="modalTitle">Tamanho P</h2>
+                
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                    <div class="qty-display" id="quantity">1</div>
+                    <button class="qty-btn" onclick="changeQuantity(1)">+</button>
+                </div>
+                
+                <div style="text-align: center;">
+                    <p style="margin: 10px 0; color: #0277BD; font-weight: 600;">Pacotes selecionados</p>
+                    <div class="total-price" id="totalPrice">R$ 45,00</div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="goToPixStep()">Gerar PIX 💙</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 2: QR Code PIX -->
+            <div class="modal-step" id="step2">
+                <h2>💰 Pagamento via PIX</h2>
+                
+                <div class="pix-area">
+                    <p style="text-align: center; margin-bottom: 15px; font-weight: 600; color: #0277BD;">
+                        Escaneie o QR Code:
+                    </p>
+                    <div class="qrcode-container">
+                        <div id="qrcode"></div>
+                    </div>
+                    
+                    <p style="text-align: center; margin: 15px 0 10px; font-weight: 600; color: #0277BD;">
+                        Ou copie o código PIX e cole no seu banco:
+                    </p>
+                    <div class="pix-code" id="pixCodeCopy"></div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button onclick="copyPixCode()">📋 Copiar Código PIX</button>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="goToConfirmStep()">Já Paguei ✅</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 3: Confirmação e mensagem -->
+            <div class="modal-step" id="step3">
+                <h2>💙 Confirme seu Presente</h2>
+                
+                <div class="form-group">
+                    <label for="donorName">Seu Nome *</label>
+                    <input type="text" id="donorName" placeholder="Digite seu nome" required>
+                </div>
+				<!--
+                <div class="form-group">
+                    <label for="donorMessage">Mensagem para o Yuri Akio (opcional)</label>
+                    <textarea id="donorMessage" rows="4" placeholder="Deixe uma mensagem de carinho para o bebê..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1em;">
+                        <input type="checkbox" id="messagePublic" checked style="width: auto; cursor: pointer;">
+                        <span>Tornar mensagem pública no site</span>
+                    </label>
+                </div>
+				-->
+                <div style="text-align: center;">
+                    <button onclick="confirmPayment()" id="confirmPaymentBtn">✅ Confirmar Presente</button>
+                </div>
+
+                <div class="success-message" id="paymentSuccess">
+                    ✅ Presente confirmado! Agradecemos o carinho com o Yuri Akio 💙
+                </div>
+                <div class="error-message" id="paymentError">
+                    ❌ Erro ao confirmar. Tente novamente.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6ln7vqgWb4DZwEt7RYLTJnCWi30ke3vHtJ3YgwcJgkXr6pBNUefwFapuuAQVixfS20A/exec';
+		const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyfOECnJJMcdC4MlIMpm3pUPoUwQTXA71eFepdNkUEwNfsXLa1q5oaFOwP08A4vy9fMQ/exec';
+		
+        const PIX_KEY = '64349999000161';
+        const PIX_NAME = 'ADRIANA OTA';
+        const PIX_CITY = 'SAO PAULO';
+        
+        const chaDate = new Date('2026-02-01T15:00:00-03:00');
+
+        const DIAPER_CONFIG = {
+            'RN': { price: 30, units: 10, description: '👶 Recém-nascido', weight: 'Até 3,5kg', emoji: '🍼', image: '' },
+            'P': { price: 50, units: 20, description: '🍼 Pequeno', weight: '3,5-5kg', emoji: '🧷', image: '' },
+            'M': { price: 80, units: 40, description: '👶 Bebê', weight: '5-9kg', emoji: '🍼', image: '' },
+            'G': { price: 100, units: 30, description: '🧒 Crescendo', weight: '9-12kg', emoji: '👶', image: '' },
+            'XG': { price: 130, units: 20, description: '👦 Ativo', weight: '12-15kg', emoji: '🧸', image: '' },
+            'XXG': { price: 150, units: 10, description: '🧒 Grande', weight: 'Acima de 15kg', emoji: '🎈', image: '' }
+        };
+
+        let diaperStock = { RN: 0, P: 0, M: 0, G: 0, XG: 0, XXG: 0 };
+        let diaperPrices = { RN: 40, P: 50, M: 80, G: 100, XG: 120, XXG: 140 };
+        let diaperImages = { RN: '', P: '', M: '', G: '', XG: '', XXG: '' };
+        let currentSize = 'P';
+        let currentPrice = 50;
+        let currentQuantity = 1;
+        let maxAvailable = 0;
+        let pixCopyCode = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            loadDiaperStock();
+            loadMessages(); // Carrega mensagens ao iniciar
+            setupFormHandler();
+			setupMessageForm();
+        });
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = chaDate - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days;
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            } else {
+                document.getElementById('days').textContent = '0';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+
+        async function loadDiaperStock() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock', {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                
+                const text = await response.text();
+                const data = JSON.parse(text);
+                
+                if (data.stock) diaperStock = data.stock;
+                if (data.prices) diaperPrices = data.prices;
+                if (data.images) diaperImages = data.images;
+            } catch (error) {
+                console.error('Erro ao carregar estoque:', error);
+                diaperStock = { RN: 20, P: 15, M: 10, G: 8, XG: 5, XXG: 3 };
+            }
+            renderDiaperCards();
+        }
+
+        function renderDiaperCards() {
+            const grid = document.getElementById('diapersGrid');
+            const loading = document.getElementById('loadingDiapers');
+            
+            loading.style.display = 'none';
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+
+            Object.keys(DIAPER_CONFIG).forEach(size => {
+                const config = DIAPER_CONFIG[size];
+                const stock = diaperStock[size] || 0;
+                const price = diaperPrices[size] || config.price;
+                const image = diaperImages[size];
+                const isSoldOut = stock <= 0;
+                const hasImage = image && image.trim() !== '';
+
+                const card = document.createElement('div');
+                card.className = 'diaper-card' + (isSoldOut ? ' sold-out' : '');
+                card.onclick = isSoldOut ? null : () => openDiaperModal(size, price, stock);
+
+                card.innerHTML = `
+                    ${isSoldOut ? '<div class="sold-out-badge">Necessidade atingida, obrigado! 😊</div>' : ''}
+                    <div class="diaper-size">${size}</div>
+                    ${
+                        hasImage
+                        ? `
+                            <div class="diaper-image">
+                                <img src="${image}" alt="Fralda ${size}">
+                            </div>
+                          `
+                        : `
+                            <div class="diaper-image">
+                                ${config.emoji}
+                            </div>
+                            <div class="diaper-info">${config.description}</div>
+                            <div class="diaper-info">${config.weight}</div>
+                            <div class="diaper-info">📦 ~${config.units} unidades</div>
+                          `
+                    }
+                    <div class="diaper-info" style="color: #0288D1; font-weight: bold; font-size: 1.2em; margin-top: 10px;">
+                        R$ ${price.toFixed(2).replace('.', ',')}
+                    </div>
+                    ${!isSoldOut ? `<div class="stock-info">✅ Clique para presentear</div>` : ''}
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function openDiaperModal(size, price, stock) {
+            currentSize = size;
+            currentPrice = price;
+            currentQuantity = 1;
+            maxAvailable = stock;
+            
+            document.getElementById('modalTitle').textContent = `Tamanho ${size}`;
+            document.getElementById('quantity').textContent = '1';
+            document.getElementById('totalPrice').textContent = `R$ ${price.toFixed(2).replace('.', ',')}`;
+            
+            // Reset modal steps
+            document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('donorName').value = '';
+            //document.getElementById('donorMessage').value = '';
+            document.getElementById('paymentSuccess').style.display = 'none';
+            document.getElementById('paymentError').style.display = 'none';
+            
+            document.getElementById('diaperModal').style.display = 'flex';
+        }
+
+        function closeDiaperModal() {
+            document.getElementById('diaperModal').style.display = 'none';
+        }
+
+        function changeQuantity(change) {
+            const newQuantity = currentQuantity + change;
+            if (newQuantity >= 1) { // Removido o limite máximo
+                currentQuantity = newQuantity;
+                document.getElementById('quantity').textContent = currentQuantity;
+                const total = currentPrice * currentQuantity;
+                document.getElementById('totalPrice').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            }
+        }
+
+        function goToPixStep() {
+            document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step2').classList.add('active');
+            generatePixQRCode();
+        }
+
+        function goToConfirmStep() {
+            document.querySelectorAll('.modal-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step3').classList.add('active');
+        }
+
+        function generatePixQRCode() {
+            const totalAmount = (currentPrice * currentQuantity).toFixed(2);
+            
+            // Gera o código PIX no formato EMV
+            pixCopyCode = generatePixCode(PIX_KEY, PIX_NAME, PIX_CITY, totalAmount);
+            
+            // Exibe o código
+            document.getElementById('pixCodeCopy').textContent = pixCopyCode;
+            
+            // Limpa QR Code anterior se existir
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            // Gera novo QR Code
+            new QRCode(qrcodeDiv, {
+                text: pixCopyCode,
+                width: 240,
+                height: 240,
+                colorDark: "#0288D1",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        function generatePixCode(key, name, city, amount) {
+            // Formato PIX EMV simplificado
+            const payload = [
+                { id: '00', value: '01' }, // Payload Format Indicator
+                { id: '26', value: [
+                    { id: '00', value: 'BR.GOV.BCB.PIX' },
+                    { id: '01', value: key }
+                ]},
+                { id: '52', value: '0000' }, // Merchant Category Code
+                { id: '53', value: '986' }, // Transaction Currency (BRL)
+                { id: '54', value: amount }, // Transaction Amount
+                { id: '58', value: 'BR' }, // Country Code
+                { id: '59', value: name.substring(0, 25) }, // Merchant Name
+                { id: '60', value: city.substring(0, 15) }, // Merchant City
+                { id: '62', value: [
+                    { id: '05', value: '***' }
+                ]}
+            ];
+
+            function formatEMV(obj) {
+                if (Array.isArray(obj.value)) {
+                    const nested = obj.value.map(formatEMV).join('');
+                    return obj.id + String(nested.length).padStart(2, '0') + nested;
+                }
+                return obj.id + String(obj.value.length).padStart(2, '0') + obj.value;
+            }
+
+            let emv = payload.map(formatEMV).join('');
+            
+            // Calcula CRC16
+            function crc16(str) {
+                let crc = 0xFFFF;
+                for (let i = 0; i < str.length; i++) {
+                    crc ^= str.charCodeAt(i) << 8;
+                    for (let j = 0; j < 8; j++) {
+                        crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+                    }
+                }
+                return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+            }
+
+            emv += '6304';
+            emv += crc16(emv);
+
+            return emv;
+        }
+
+        function copyPixCode() {
+            navigator.clipboard.writeText(pixCopyCode).then(() => {
+                alert('✅ Código PIX copiado! Cole no seu aplicativo do banco.');
+            });
+        }
+		
+        async function confirmPayment() {
+            const donorName = document.getElementById('donorName').value.trim();
+            const confirmBtn = document.getElementById('confirmPaymentBtn');
+            
+            if (!donorName) {
+                alert('Por favor, digite seu nome para confirmar o presente!');
+                return;
+            }
+
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = '⏳ Enviando...';
+
+            const data = {
+                action: 'addGift',
+                name: donorName,
+                size: currentSize,
+                quantity: currentQuantity,
+                total: (currentPrice * currentQuantity).toFixed(2),
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify(data)
+                });
+                
+                const text = await response.text();
+                const result = JSON.parse(text);
+                
+                if (result.success) {
+                    document.getElementById('paymentSuccess').style.display = 'block';
+                    document.getElementById('donorName').value = '';
+                    loadDiaperStock();														
+                    setTimeout(() => {
+                        closeDiaperModal();
+                        confirmBtn.disabled = false;
+                        confirmBtn.textContent = '✅ Confirmar Presente';
+                    }, 3000);
+                } else {
+                    throw new Error(result.error || 'Erro ao salvar');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('paymentError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('paymentError').style.display = 'none';
+                }, 3000);
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = '✅ Confirmar Presente';
+            }
+        }
+
+        function setupFormHandler() {
+            // Máscara de telefone
+            document.getElementById('phone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length > 10) {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+                } else if (value.length > 6) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+                } else if (value.length > 2) {
+                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                } else {
+                    value = value.replace(/^(\d*)/, '($1');
+                }
+                
+                e.target.value = value;
+            });
+
+            document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const guests = document.getElementById('guests').value;
+                const button = document.getElementById('rsvpButton');
+
+                button.disabled = true;
+                button.textContent = '⏳ Enviando...';
+
+                const data = {
+                    action: 'addRSVP',
+                    name: name,
+                    phone: phone,
+                    guests: guests,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const text = await response.text();
+                    const result = JSON.parse(text);
+                    
+                    if (result.success) {
+                        document.getElementById('rsvpSuccess').style.display = 'block';
+                        document.getElementById('rsvpForm').reset();
+
+                        setTimeout(() => {
+                            document.getElementById('rsvpSuccess').style.display = 'none';
+                        }, 5000);
+                    } else {
+                        throw new Error(result.error || 'Erro ao salvar');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    document.getElementById('rsvpError').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('rsvpError').style.display = 'none';
+                    }, 3000);
+                }
+
+                button.disabled = false;
+                button.textContent = '✅ Confirmar Presença';
+            });
+        }
+		
+		function setupMessageForm(){
+			
+			document.getElementById('messageForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+				
+                const name = document.getElementById('messageName').value.trim();
+                const message = document.getElementById('messageText').value.trim();
+                const isPublic = document.getElementById('messageFormPublic').checked;
+                const button = document.getElementById('messageButton');
+
+                if (!name || !message) {
+                    alert('Por favor, preencha seu nome e a mensagem!');
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent = '⏳ Enviando...';
+
+                const data = {
+                    action: 'addMessage',
+                    name: name,
+                    message: message,
+                    messagePublic: isPublic,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const text = await response.text();
+                    const result = JSON.parse(text);
+                    
+                    if (result.success) {
+                        document.getElementById('messageSuccess').style.display = 'block';
+                        document.getElementById('messageForm').reset();
+                        document.getElementById('messageFormPublic').checked = true;
+
+                        if (isPublic) {
+                            setTimeout(() => loadMessages(), 1000);
+                        }
+
+                        setTimeout(() => {
+                            document.getElementById('messageSuccess').style.display = 'none';
+                        }, 5000);
+                    } else {
+                        throw new Error(result.error || 'Erro ao salvar');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    document.getElementById('messageError').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('messageError').style.display = 'none';
+                    }, 3000);
+                }
+
+                button.disabled = false;
+                button.textContent = '💙 Enviar Mensagem';		
+            });
+        }		
+
+        async function loadMessages() {
+            const container = document.getElementById('messagesContainer');
+            
+            try {
+                //console.log('Carregando mensagens...');
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getMessages', {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                
+                //console.log('Response status:', response.status);
+                const text = await response.text();
+                //console.log('Resposta recebida:', text);
+                
+                const data = JSON.parse(text);
+                //console.log('Mensagens parseadas:', data);
+                
+                container.innerHTML = '';
+                
+                if (data.messages && data.messages.length > 0) {
+                    //console.log(`${data.messages.length} mensagens carregadas`);
+					const ultimas5 = data.messages.slice(-20);
+                    ultimas5.forEach(msg => {
+                        addMessageToWall(msg.name, msg.message);
+                    });
+                } else {
+                    //console.log('Nenhuma mensagem encontrada');
+                    container.innerHTML = '<p class="intro-text" style="color: #90CAF9;">As mensagens de carinho para o Yuri Akio aparecerão aqui...</p>';
+                }
+            } catch (error) {
+                //console.error('Erro ao carregar mensagens:', error);
+                container.innerHTML = '<p class="intro-text" style="color: #90CAF9;">As mensagens de carinho para o Yuri Akio aparecerão aqui...</p>';
+            }
+        }
+
+        function addMessageToWall(name, message) {
+            const container = document.getElementById('messagesContainer');
+            
+            // Remove mensagem placeholder se existir
+            const placeholder = container.querySelector('p.intro-text');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            const messageCard = document.createElement('div');
+            messageCard.className = 'message-card';
+            messageCard.innerHTML = `
+                <div class="message-author">💙 ${escapeHtml(name)}</div>
+                <div class="message-text">${escapeHtml(message)}</div>
+            `;
+            container.insertBefore(messageCard, container.firstChild);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }		 
+        window.onclick = function(event) {
+            const modal = document.getElementById('diaperModal');
+            if (event.target === modal) {
+                closeDiaperModal();
+            }
+        }
+    </script>
+</body>
+</html>
